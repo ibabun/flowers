@@ -17,6 +17,10 @@ public class flowerBirgth : MonoBehaviour
     public GameObject stebel;
     public GameObject flowerTop;
 
+    //eatingGO
+    public GameObject eater;
+    public GameObject food;
+
     //mutation 
     public float life;
     public int productivity = 2;
@@ -32,7 +36,7 @@ public class flowerBirgth : MonoBehaviour
     private float flowerTopB = 0f;
     //
     public int Generation;
-    
+    public float iLive;
     
     //taking from soil
     public foodMult fmObj;
@@ -41,8 +45,7 @@ public class flowerBirgth : MonoBehaviour
     private float mult;
 
 
-    public static bool iAmFood;
-    public GameObject eater;
+    public bool iAmFood = false;
 
     void Start()
     {
@@ -63,9 +66,11 @@ public class flowerBirgth : MonoBehaviour
         collisionEvents = new List<ParticleCollisionEvent>();
 
         if (myMan != null)
-        { myNum = myMan.flowerInScene;
+        { 
+            myNum = myMan.flowerInScene;
             maxFlow = myMan.maxFlowers;
             myMan.flowerInScene++;
+            iLive = Time.time;
         }
 
         ////StartCoroutine(waiter());   
@@ -78,11 +83,10 @@ public class flowerBirgth : MonoBehaviour
 
         if (life <= 0.1f)
         {
-            //myMan.flowerInScene = myMan.flowerInScene --;
+            myMan.flowerInScene--;
 
             myMan.food = this.gameObject;
-            myMan.killProc();
-            // Destroy(this.gameObject);
+            Destroy(this.gameObject);
         }
 
         if(fmObj != null && fmObj.mult > 0.1f) //some black magic lol (working somehow!!!!)
@@ -102,19 +106,26 @@ public class flowerBirgth : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        
+
         if (collision.gameObject.tag == "flower")
         {
             eater = collision.gameObject;
 
-
             flowerBirgth foreinStr = eater.GetComponent<flowerBirgth>();
 
-            if (str > foreinStr.str && eater != null)
+            if (str < foreinStr.str && eater != null && !iAmFood)
             {
-                myMan.eater = this.gameObject;
-                myMan.food = eater;
-                myMan.transferProc();
+                food = this.gameObject;
+               
+                if (eater != null && food != null)
+                {
+                    iAmFood = true;
+                    myMan.flowerInScene--;
+                    Destroy(this.gameObject);
+                    //myMan.eater = this.gameObject;
+                    //myMan.food = eater;
+                    //myMan.transferProc();
+                }
             }
         }
         if (collision.gameObject.tag == "foodLayer")
@@ -124,6 +135,7 @@ public class flowerBirgth : MonoBehaviour
         }
 
     }
+
 
     void OnParticleCollision(GameObject other)
     {
@@ -145,7 +157,7 @@ public class flowerBirgth : MonoBehaviour
             futurB.Generation = Generation + 1;
             futurB.life = life * Random.Range(0.5f, 2f);
             futurB.str = str * Random.Range(0.5f, 1.5f);
-
+           
             futurB.stebelR = stebelR - Random.Range(0f, 1f) + Random.Range(0f, 1f);
             futurB.stebelG = stebelG - Random.Range(0f, 1f) + Random.Range(0f, 1f);
             futurB.stebelB = stebelB - Random.Range(0f, 1f) + Random.Range(0f, 1f);
