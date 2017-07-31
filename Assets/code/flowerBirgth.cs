@@ -73,7 +73,6 @@ public class flowerBirgth : MonoBehaviour
             iLive = Time.time;
         }
 
-        ////StartCoroutine(waiter());   
     }
     void FixedUpdate()
     {
@@ -96,7 +95,6 @@ public class flowerBirgth : MonoBehaviour
             
             fmObj.mult += deltaForFood/fmObj.speedOfDrain;
             
-            //Debug.Log("DLF___ " + deltaForFood);
             life += fmObj.mult/fmObj.speedOfDrain;
         }
 
@@ -122,16 +120,14 @@ public class flowerBirgth : MonoBehaviour
                     iAmFood = true;
                     myMan.flowerInScene--;
                     Destroy(this.gameObject);
-                    //myMan.eater = this.gameObject;
-                    //myMan.food = eater;
-                    //myMan.transferProc();
+
                 }
             }
         }
         if (collision.gameObject.tag == "foodLayer")
         {
             fmObj = collision.gameObject.GetComponent<foodMult>();
-            //Debug.Log("iFoundMyMult");
+
         }
 
     }
